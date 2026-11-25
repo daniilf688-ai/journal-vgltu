@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1f6feb"/>
+      <stop offset="100%" stop-color="#0b4fbd"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#g)"/>
+  <rect x="112" y="118" width="288" height="276" rx="28" fill="#ffffff" fill-opacity="0.96"/>
+  <rect x="152" y="168" width="208" height="24" rx="12" fill="#1f6feb" fill-opacity="0.18"/>
+  <rect x="152" y="220" width="208" height="24" rx="12" fill="#1f6feb" fill-opacity="0.18"/>
+  <rect x="152" y="272" width="132" height="24" rx="12" fill="#1f6feb" fill-opacity="0.18"/>
+  <path d="M168 340h44l18-38 28 76 34-90 20 52h32" fill="none" stroke="#1f6feb" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="256" y="156" text-anchor="middle" font-family="Arial, sans-serif" font-size="54" font-weight="700" fill="#0b4fbd">Ж</text>
+</svg>

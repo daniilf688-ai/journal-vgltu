@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0077ff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Журнал ВГЛТУ">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <title>Журнал ВГЛТУ</title>
+  <style>
+    body{margin:0;background:#edeef0;color:#2c2d2e;font-family:Arial,sans-serif}
+    .auth-locked .app{pointer-events:none;user-select:none}
+    .login-screen{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;background:#edeef0;overflow:auto}
+    .login-card{width:100%;max-width:400px;box-sizing:border-box;padding:32px;border-radius:12px;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+    .login-mark{width:48px;height:48px;margin-bottom:16px;border-radius:10px;background:#0077ff;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700}
+    .login-card h1{margin:0;font-size:22px}
+    .login-sub{margin:6px 0 20px;color:#818c99}
+    .field-label{display:block;margin:12px 0 6px;font-size:13px;font-weight:600}
+    .input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #c4c8cc;border-radius:8px;font-size:16px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border:0;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer}
+    .btn-primary{background:#0077ff;color:#fff}
+    .login-submit{width:100%;margin-top:20px}
+    .form-error{min-height:16px;margin:8px 0 0;color:#e64646;font-size:13px}
+    @media (prefers-color-scheme:dark){body{background:#19191a;color:#e1e3e6}.login-screen{background:#19191a}.login-card{background:#232324}}
+  </style>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <script>
+window.__cssTry = {};
+function __cssRetry(i){
+  var n = window.__cssTry[i] || 0;
+  if (n >= 2) return;
+  window.__cssTry[i] = n + 1;
+  var l = document.createElement('link');
+  l.rel = 'stylesheet';
+  l.href = 'c' + i + '.css?r=' + (n + 1);
+  l.onerror = function(){ __cssRetry(i); };
+  document.head.appendChild(l);
+}
+</script>
+  <link rel="stylesheet" href="c0.css" onerror="__cssRetry(0)">
+  <link rel="stylesheet" href="c1.css" onerror="__cssRetry(1)">
+</head>
+<body class="auth-locked">
+  <div class="app">
+    <aside class="sidebar" id="sidebar" aria-label="Основная навигация">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"> Ж</div>
+        <div>
+          <div class="brand-name">Журнал ВГЛТУ</div>
+          <div class="brand-sub">посещаемость и оценки</div>
+        </div>
+        <button class="icon-btn sidebar-close" id="sidebarClose" type="button" aria-label="Закрыть меню">✕</button>
+      </div>
+
+      <nav class="nav" id="nav">
+        <button class="nav-item is-active" type="button" data-view="overview" aria-current="page"><span aria-hidden="true">▦</span> Обзор</button>
+        <button class="nav-item" type="button" data-view="groups"><span aria-hidden="true">◫</span> Группы</button>
+        <button class="nav-item" type="button" data-view="journal"><span aria-hidden="true">☰</span> Журнал</button>
+        <button class="nav-item" type="button" data-view="students"><span aria-hidden="true">♙</span> Студенты</button>
+        <button class="nav-item" type="button" data-view="lessons"><span aria-hidden="true">▤</span> Занятия</button>
+        <button class="nav-item" type="button" data-view="instruction"><span aria-hidden="true">ⓘ</span> Инструкция</button>
+        <button class="nav-item" type="button" data-view="profile"><span aria-hidden="true">◉</span> Профиль</button>
+        <button class="nav-item admin-only" type="button" data-view="users" hidden><span aria-hidden="true">♟</span> Пользователи</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="source-label">Источник данных</div>
+        <div class="source-value" id="sourceName">—</div>
+        <div class="source-meta" id="sourceMeta">—</div>
+        <div class="edit-state" id="editState">Изменений нет</div>
+        <div class="sync-state">Данные сохраняются в браузере</div>
+        <div class="auth-panel" id="authPanel" hidden>
+          <div class="auth-user" id="authUser">—</div>
+          <div class="auth-role" id="authRole">—</div>
+          <button class="btn btn-ghost" id="logoutBtn" type="button">Выйти</button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Открыть меню" aria-expanded="false">☰</button>
+        <div class="topbar-title">
+          <h1 id="viewTitle">Обзор</h1>
+          <p id="viewSubtitle">Снимок данных из таблицы</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" id="installBtn" type="button" hidden>Установить</button>
+          <button class="btn btn-ghost" id="journalsBtn" type="button" title="Сохранённые журналы">Журналы</button>
+          <button class="btn btn-ghost" id="themeBtn" type="button" title="Сменить тему" aria-label="Сменить тему">◐</button>
+          <button class="btn btn-ghost" id="importBtn" type="button" title="Импорт Excel">Импорт Excel</button>
+          <button class="btn btn-primary" id="exportExcelBtn" type="button" title="Экспорт в Excel">Экспорт Excel</button>
+          <input type="file" id="importFile" accept=".xlsx,.xlsm,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" hidden>
+        </div>
+      </header>
+
+      <main class="content" id="view" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <div class="scrim" id="scrim" hidden></div>
+
+  <dialog class="editor" id="cellEditor" aria-labelledby="editorTitle">
+    <form method="dialog" id="editorForm">
+      <div class="editor-head">
+        <div>
+          <h2 id="editorTitle">Отметка</h2>
+          <p class="editor-sub" id="editorSub"></p>
+        </div>
+        <button class="icon-btn" type="button" id="editorClose" aria-label="Закрыть">✕</button>
+      </div>
+      <fieldset class="field-group">
+        <legend>Статус посещаемости</legend>
+        <div class="choice-row" id="statusChoices"></div>
+      </fieldset>
+      <fieldset class="field-group">
+        <legend>Оценка</legend>
+        <div class="choice-row" id="gradeChoices"></div>
+      </fieldset>
+      <label class="field-label" for="commentInput">Комментарий</label>
+      <input class="input" id="commentInput" type="text" maxlength="200" placeholder="Необязательно">
+      <div class="editor-actions">
+        <button class="btn btn-ghost" type="button" id="clearCell">Очистить</button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost" type="button" id="cancelCell">Отмена</button>
+        <button class="btn btn-primary" type="button" id="saveCell">Сохранить</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="editor" id="entityEditor" aria-labelledby="entityTitle">
+    <form method="dialog" id="entityForm">
+      <div class="editor-head">
+        <div>
+          <h2 id="entityTitle">Новая запись</h2>
+          <p class="editor-sub" id="entitySub"></p>
+        </div>
+        <button class="icon-btn" type="button" id="entityClose" aria-label="Закрыть">✕</button>
+      </div>
+      <div id="entityFields"></div>
+      <p class="form-error" id="entityError" aria-live="polite"></p>
+      <div class="editor-actions">
+        <button class="btn btn-ghost" type="button" id="entityCancel">Отмена</button>
+        <span class="spacer"></span>
+        <button class="btn btn-primary" type="button" id="entitySave">Сохранить</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="editor journals-dialog" id="journalsDialog" aria-labelledby="journalsTitle">
+    <div class="editor-head">
+      <div>
+        <h2 id="journalsTitle">Сохранённые журналы</h2>
+        <p class="editor-sub">Снимки текущего журнала с оценками и отметками</p>
+      </div>
+      <button class="icon-btn" type="button" id="journalsCloseX" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="save-journal-row">
+      <input class="input" id="journalName" type="text" maxlength="80" placeholder="Название, например «1 семестр»">
+      <button class="btn btn-primary" type="button" id="journalSave">Сохранить текущий</button>
+    </div>
+    <p class="form-error" id="journalError" aria-live="polite"></p>
+    <div class="saved-journals" id="savedJournals"></div>
+  </dialog>
+
+  <dialog class="editor sync-dialog" id="installDialog" aria-labelledby="installTitle">
+    <div class="editor-head">
+      <div>
+        <h2 id="installTitle">Установить на устройство</h2>
+        <p class="editor-sub">Чтобы открыть как приложение с главного экрана</p>
+      </div>
+      <button class="icon-btn" type="button" id="installCloseX" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="sync-info" id="installInfo"></div>
+    <p class="sync-hint">После установки приложение откроется отдельно, без адресной строки браузера. Данные будут сохраняться на этом устройстве.</p>
+  </dialog>
+
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="login-mark" aria-hidden="true">Ж</div>
+      <h1>Электронный журнал</h1>
+      <p class="login-sub">Войдите под своим аккаунтом</p>
+      <form id="loginForm">
+        <label class="field-label" for="loginLogin">Логин</label>
+        <input class="input" id="loginLogin" type="text" maxlength="40" autocomplete="username" required>
+        <label class="field-label" for="loginPassword">Пароль</label>
+        <input class="input" id="loginPassword" type="password" maxlength="100" autocomplete="current-password" required>
+        <p class="form-error" id="loginError" aria-live="polite"></p>
+        <button class="btn btn-primary login-submit" id="loginSubmit" type="submit">Войти</button>
+      </form>
+    </div>
+  </div>
+
+  <dialog class="editor" id="passwordDialog" aria-labelledby="passwordTitle">
+    <div class="editor-head">
+      <div>
+        <h2 id="passwordTitle">Смена пароля</h2>
+        <p class="editor-sub" id="passwordUser"></p>
+      </div>
+      <button class="icon-btn" type="button" id="passwordCloseX" aria-label="Закрыть">✕</button>
+    </div>
+    <label class="field-label" for="newPassword">Новый пароль</label>
+    <input class="input" id="newPassword" type="password" maxlength="100" autocomplete="new-password" placeholder="Не менее 4 символов">
+    <p class="form-error" id="passwordError" aria-live="polite"></p>
+    <div class="editor-actions">
+      <button class="btn btn-ghost" type="button" id="passwordCancel">Отмена</button>
+      <span class="spacer"></span>
+      <button class="btn btn-primary" type="button" id="passwordSave">Сохранить</button>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="journal-data.js"></script>
+  <script>window.__XLSX_CHUNKS__=32;</script>
+  <script>
+(function(){
+  var total = 10, idx = 0, tries = 0, done = false, btn = null;
+  function status(text, disabled){ if (btn) { btn.textContent = text; btn.disabled = !!disabled; } }
+  document.addEventListener('DOMContentLoaded', function(){
+    btn = document.getElementById('loginSubmit');
+    if (btn && !done) status('\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430...', true);
+  });
+  function finish(){
+    if (done) return;
+    done = true;
+    try {
+      var b64 = (window.__ap || []).join(''); window.__ap = null;
+      var bin = atob(b64), u = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+      (0, eval)(new TextDecoder('utf-8').decode(u));
+      status('\u0412\u043e\u0439\u0442\u0438', false);
+    } catch (e) { status('\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438 - \u043e\u0431\u043d\u043e\u0432\u0438\u0442\u0435', true); }
+  }
+  function next(){
+    if (done) return;
+    if (idx >= total) { finish(); return; }
+    var s = document.createElement('script');
+    s.src = 'a' + idx + '.js?r=' + tries;
+    s.onload = function(){ idx++; tries = 0; next(); };
+    s.onerror = function(){
+      tries++;
+      if (tries > 2) { status('\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438 - \u043e\u0431\u043d\u043e\u0432\u0438\u0442\u0435', true); return; }
+      setTimeout(next, 350);
+    };
+    document.head.appendChild(s);
+  }
+  next();
+})();
+</script>
+</body>
+</html>
